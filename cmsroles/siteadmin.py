@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Permission
 from django.contrib.sites.models import Site
-
+from django.db.models import Q
+from collections import defaultdict
 from cmsroles.models import Role
 
 
@@ -55,3 +56,21 @@ def get_site_users(site):
         for user in role.users(site):
             users_to_roles[user] = role
     return users_to_roles
+
+
+def get_user_roles_on_sites_ids(user):
+    """
+        Returns a dictionary with all roles that a user has, mapped to the
+        site where the user has that specific role.
+    """
+    qry = Q(Q(derived_page_permissions__user=user) |
+            Q(derived_global_permissions__group__user=user))
+    roles_with_sites = Role.objects.filter(qry).values_list(
+        'id',
+        'derived_global_permissions__sites',
+        'derived_page_permissions__page__site').distinct()
+
+    result_data = defaultdict(set)
+    for role_id, global_perm_site, page_perm_site in roles_with_sites:
+        result_data[role_id].add(global_perm_site or page_perm_site)
+    return result_data

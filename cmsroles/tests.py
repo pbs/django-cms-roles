@@ -11,7 +11,8 @@ from cms.api import create_page
 
 from cmsroles.models import Role
 from cmsroles.siteadmin import (is_site_admin, get_administered_sites, get_site_users,
-                                get_site_admin_required_permission)
+                                get_site_admin_required_permission,
+                                get_user_roles_on_sites_ids)
 import cmsroles.management.commands.manage_page_permissions as manage_page_permissions
 
 
@@ -91,6 +92,40 @@ class SiteAdminTests(TestCase, HelpersMixin):
         self._create_simple_setup()
         joe = User.objects.get(username='joe')
         self.assertTrue(is_site_admin(joe))
+
+    def test_get_user_roles_on_sites_ids(self):
+        no_role_user = User.objects.create(
+            username='portocala', is_staff=True)
+        self.assertDictEqual(get_user_roles_on_sites_ids(no_role_user), {})
+
+        self._create_simple_setup()
+        bob = User.objects.get(username='bob')
+        bar_site = Site.objects.get(name='bar.site.com')
+        writer_role = Role.objects.get(name='writer')
+        # bob is writer on bar_site
+        self.assertDictEqual(get_user_roles_on_sites_ids(bob),
+                             {writer_role.id: set([bar_site.id])})
+
+        editor_role = Role.objects.get(name='editor')
+        foo_site = Site.objects.get(name='foo.site.com')
+        editor_role.grant_to_user(bob, foo_site)
+        # bob is editor on foo_site and writer on bar_site
+        self.assertDictEqual(get_user_roles_on_sites_ids(bob), {
+            editor_role.id: set([foo_site.id]),
+            writer_role.id: set([bar_site.id])})
+
+        joe = User.objects.get(username='joe')
+        admin_role = Role.objects.get(name='site admin')
+        self.assertDictEqual(get_user_roles_on_sites_ids(joe), {
+            admin_role.id: set([foo_site.id, bar_site.id]),
+            })
+
+        robin = User.objects.get(username='robin')
+        developer_role = Role.objects.get(name='developer')
+        # dev on bar
+        self.assertDictEqual(get_user_roles_on_sites_ids(robin), {
+            editor_role.id: set([foo_site.id]),
+            developer_role.id: set([bar_site.id])})
 
     def test_get_administered_sites(self):
         self._create_simple_setup()
@@ -702,7 +737,7 @@ class ViewsTests(TestCase, HelpersMixin):
         # the master page (wich bob has access to)
         # is in the returned formset
         self.assertTrue('selected="selected"> master' in page_formset)
-        
+
     def test_no_duplicate_groups_in_the_group_admin(self):
         site_admin_group = self._create_site_admin_group()
         Role.objects.create(
