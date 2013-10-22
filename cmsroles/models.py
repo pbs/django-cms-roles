@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, connection
 from django.db.models import signals, Q
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
@@ -277,7 +277,8 @@ def delete_role(instance, **kwargs):
 @receiver(signals.post_save, sender=Site)
 def create_role_groups(instance, **kwargs):
     site = instance
-    if kwargs['created']:
+    if all((kwargs['created'],
+            'cmsroles_role' in connection.introspection.table_names())):
         for role in Role.objects.all():
             role.add_site_specific_global_page_perm(site)
 
