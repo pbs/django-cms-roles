@@ -81,9 +81,18 @@ django.jQuery(document).ready(function(){
         }
     })
 
+    function toggleEnableFormSubmit(enable){
+        if(enable){
+            $('#save_and_continue, #save').removeAttr('disabled');
+        } else {
+            $('#save_and_continue, #save').attr('disabled', 'disabled');
+        }
+    }
+
     function fetch_pages(user_settings, hooks){
         var user_role_pair = get_user_and_role(user_settings);
         var current_site = $('#site_selector').find(":selected").val()
+        toggleEnableFormSubmit(false);
         $.ajax({
             type: 'GET',
             url: '/admin/cmsroles/get_page_formset/',
@@ -108,6 +117,9 @@ django.jQuery(document).ready(function(){
             },
             error: function(data, textStatus){
                 hooks.error_hook(true);
+            },
+            complete: function(data, textStatus){
+                toggleEnableFormSubmit(true);
             }
         });
     }
