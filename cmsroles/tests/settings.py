@@ -14,16 +14,14 @@ INSTALLED_APPS = [
     'south',
     'sekizai',
     'cmsroles',
-    'django_nose',
 ]
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 CMS_TEMPLATES = [('cms_mock_template.html', 'cms_mock_template.html')]
 CMS_MODERATOR = True
 CMS_PERMISSION = True
 STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
-ROOT_URLCONF = 'urls_test'
+ROOT_URLCONF = 'cmsroles.tests.urls'
 TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.auth.context_processors.auth",
     'django.contrib.messages.context_processors.messages',
