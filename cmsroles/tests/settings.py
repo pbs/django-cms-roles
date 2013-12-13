@@ -53,10 +53,20 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 TEMPLATE_LOADERS = (
-    'cmsroles.test_utils.MockLoader',
+    'cmsroles.tests.utils.MockLoader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
     )
 CACHE_BACKEND = 'locmem:///'
 
 SOUTH_TESTS_MIGRATE = False
+CMS_SITE_CHOICES_CACHE_KEY = 'CMS:site_choices'
+CMS_PAGE_CHOICES_CACHE_KEY = 'CMS:page_choices'
+CMS_CACHE_PREFIX = 'CMS'
+CMS_LANGUAGES = [
+    ('en', 'English'),
+]
+CMS_SOFTROOT = True
+CMS_TEMPLATES_INHERITANCE = False
+CMS_TEMPLATE_INHERITANCE_MAGIC = 'INHERIT'
+CMS_MEDIA_URL = '/media/'
