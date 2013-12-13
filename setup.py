@@ -22,11 +22,6 @@ setup(
     setup_requires=[
         's3sourceuploader',
     ],
-    tests_require=[
-        'django-nose',
-        'mock==1.0.1',
-    ],
-    test_suite='runtests.runtests',
     packages=find_packages(),
     include_package_data=True,
 )
