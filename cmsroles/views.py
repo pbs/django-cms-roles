@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.utils.encoding import smart_unicode
@@ -93,7 +93,11 @@ def _get_user_sites(user, site_pk):
     if not site_pk:
         return (administered_sites[0], administered_sites)
 
-    site_pk = int(site_pk)
+    try:
+        site_pk = int(site_pk)
+    except ValueError:
+        raise Http404()
+
     if all(site_pk != s.pk for s in administered_sites):
         raise PermissionDenied()
     else:

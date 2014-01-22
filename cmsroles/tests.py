@@ -31,7 +31,7 @@ class HelpersMixin(object):
 
     def _create_simple_setup(self):
         """Creates two sites, three roles and five users that have
-        different foles within the two sites.
+        different roles within the two sites.
 
         Many tests depend on this particular setup. If you want to add
         more users, sites, roles, create a new method which calls this one...
@@ -541,6 +541,13 @@ class ViewsTests(TestCase, HelpersMixin):
         robin = User.objects.get(username='robin')
         editor = Role.objects.get(name='editor')
         return foo_site, joe, admin, george, developer, robin, editor
+
+    def test_invalid_site_404(self):
+        self._create_simple_setup()
+        self.client.login(username='root', password='root')
+        foo_site = Site.objects.get(name='foo.site.com', domain='foo.site.com')
+        response = self.client.get('/admin/cmsroles/usersetup/?site=asd')
+        self.assertEqual(response.status_code, 404)
 
     def test_change_roles(self):
         self._create_simple_setup()
