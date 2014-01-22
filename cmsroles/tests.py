@@ -545,7 +545,6 @@ class ViewsTests(TestCase, HelpersMixin):
     def test_invalid_site_404(self):
         self._create_simple_setup()
         self.client.login(username='root', password='root')
-        foo_site = Site.objects.get(name='foo.site.com', domain='foo.site.com')
         response = self.client.get('/admin/cmsroles/usersetup/?site=asd')
         self.assertEqual(response.status_code, 404)
 
