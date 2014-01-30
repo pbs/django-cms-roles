@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group, User
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.forms import ModelForm, ModelChoiceField
 from django.db.models import Q
@@ -70,8 +71,27 @@ admin.site.register(UserSetup, UserSetupAdmin)
 def _get_registered_modeladmin(model):
     return type(admin.site._registry[model])
 
+registeredGroupAdminClass = _get_registered_modeladmin(Group)
+registeredGroupFormClass = registeredGroupAdminClass.form
 
-class ExtendedGroupAdmin(_get_registered_modeladmin(Group)):
+class ExtendedGroupForm(registeredGroupFormClass):
+
+    def clean_user(self):
+        users = self.cleaned_data.get('user', [])
+        inactive = [u.username for u in users if not u.is_active]
+        if users and inactive:
+            raise ValidationError('Following users are inactive and cannot '
+                                  'be assigned to any groups: %s. Try again'
+                                  ' after you make them active.' % (
+                                    ', '.join(inactive), ))
+        _super = super(ExtendedGroupForm, self)
+        if hasattr(_super, 'clean_user'):
+            return _super.clean_user()
+        return users
+
+
+class ExtendedGroupAdmin(registeredGroupAdminClass):
+    form = ExtendedGroupForm
 
     @classmethod
     def get_filtered_queryset(cls, qs=None):
