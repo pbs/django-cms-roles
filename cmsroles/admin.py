@@ -87,6 +87,36 @@ class ExtendedGroupAdmin(_get_registered_modeladmin(Group)):
 admin.site.unregister(Group)
 admin.site.register(Group, ExtendedGroupAdmin)
 
+registeredUserAdminClass = _get_registered_modeladmin(User)
+registeredUserFormClass = registeredUserAdminClass.form
+
+class ExtendedUserForm(registeredUserFormClass):
+
+    def clean_groups(self):
+        active = self.cleaned_data.get('is_active', True)
+        if not active:
+            return []
+        _super = super(ExtendedUserForm, self)
+        if hasattr(_super, 'clean_groups'):
+            return _super.clean_groups()
+        return self.cleaned_data.get('groups', [])
+
+    def clean_user_permissions(self):
+        active = self.cleaned_data.get('is_active', True)
+        if not active:
+            return []
+        _super = super(ExtendedUserForm, self)
+        if hasattr(_super, 'clean_user_permissions'):
+            return _super.clean_user_permissions()
+        return self.cleaned_data.get('user_permissions', [])
+
+
+class ExtendedUserAdmin(registeredUserAdminClass):
+    form = ExtendedUserForm
+
+admin.site.unregister(User)
+admin.site.register(User, ExtendedUserAdmin)
+
 
 class ExtendedGlobalPagePermssionAdmin(_get_registered_modeladmin(GlobalPagePermission)):
 

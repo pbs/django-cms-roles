@@ -211,7 +211,7 @@ class Role(AbstractPagePermission):
 
     def ungrant_from_user(self, user, site):
         """Remove the given user from this role from the given site"""
-        # TODO: Extract some 'state' class that implements the 
+        # TODO: Extract some 'state' class that implements the
         #       is/isn't site wide differences or create two different
         #       Role classes
         if self.is_site_wide:
@@ -354,3 +354,14 @@ def update_site_specific_groups(instance, **kwargs):
         role.update_site_groups(
             update_names=False,
             update_permissions=True)
+
+
+@receiver(signals.post_save, sender=User)
+def clear_roles_for_inactive_user(instance, **kwargs):
+    if instance.is_active:
+        return
+    from cmsroles.siteadmin import get_user_roles_on_sites_ids
+    roles_on_sites = get_user_roles_on_sites_ids(instance)
+    for role in Role.objects.filter(id__in=roles_on_sites.keys()):
+        for site in Site.objects.filter(id__in=roles_on_sites[role.id]):
+            role.ungrant_from_user(instance, site)
