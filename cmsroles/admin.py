@@ -8,6 +8,8 @@ from django.db.models import Q
 from cmsroles.models import Role, get_permission_fields
 from cmsroles.siteadmin import is_site_admin, get_administered_sites
 from cms.models.permissionmodels import PageUser, PageUserGroup, GlobalPagePermission
+from admin_extend.extend import (
+    registered_modeladmin, registered_form, extend_registered)
 
 
 class RoleForm(ModelForm):
@@ -67,14 +69,7 @@ admin.site.register(Role, RoleAdmin)
 admin.site.register(UserSetup, UserSetupAdmin)
 
 
-# admin extensions
-def _get_registered_modeladmin(model):
-    return type(admin.site._registry[model])
-
-registeredGroupAdminClass = _get_registered_modeladmin(Group)
-registeredGroupFormClass = registeredGroupAdminClass.form
-
-class ExtendedGroupForm(registeredGroupFormClass):
+class ExtendedGroupForm(registered_form(Group)):
 
     def clean_user(self):
         users = self.cleaned_data.get('user', [])
@@ -90,7 +85,8 @@ class ExtendedGroupForm(registeredGroupFormClass):
         return users
 
 
-class ExtendedGroupAdmin(registeredGroupAdminClass):
+@extend_registered
+class ExtendedGroupAdmin(registered_modeladmin(Group)):
     form = ExtendedGroupForm
 
     @classmethod
@@ -104,13 +100,7 @@ class ExtendedGroupAdmin(registeredGroupAdminClass):
             super(ExtendedGroupAdmin, self).queryset(request))
 
 
-admin.site.unregister(Group)
-admin.site.register(Group, ExtendedGroupAdmin)
-
-registeredUserAdminClass = _get_registered_modeladmin(User)
-registeredUserFormClass = registeredUserAdminClass.form
-
-class ExtendedUserForm(registeredUserFormClass):
+class ExtendedUserForm(registered_form(User)):
 
     def clean_groups(self):
         active = self.cleaned_data.get('is_active', True)
@@ -131,14 +121,13 @@ class ExtendedUserForm(registeredUserFormClass):
         return self.cleaned_data.get('user_permissions', [])
 
 
-class ExtendedUserAdmin(registeredUserAdminClass):
+@extend_registered
+class ExtendedUserAdmin(registered_modeladmin(User)):
     form = ExtendedUserForm
 
-admin.site.unregister(User)
-admin.site.register(User, ExtendedUserAdmin)
 
-
-class ExtendedGlobalPagePermssionAdmin(_get_registered_modeladmin(GlobalPagePermission)):
+@extend_registered
+class ExtendedGlobalPagePermssionAdmin(registered_modeladmin(GlobalPagePermission)):
 
     def queryset(self, request):
         qs = super(ExtendedGlobalPagePermssionAdmin, self).queryset(request)
@@ -151,16 +140,9 @@ class ExtendedGlobalPagePermssionAdmin(_get_registered_modeladmin(GlobalPagePerm
             db_field, request, **kwargs)
 
 
-admin.site.unregister(GlobalPagePermission)
-admin.site.register(GlobalPagePermission, ExtendedGlobalPagePermssionAdmin)
-
-
-class ExtendedPageUserGroupAdmin(_get_registered_modeladmin(PageUserGroup)):
+@extend_registered
+class ExtendedPageUserGroupAdmin(registered_modeladmin(PageUserGroup)):
 
     def queryset(self, request):
         qs = ExtendedGroupAdmin.get_filtered_queryset(
             super(ExtendedPageUserGroupAdmin, self).queryset(request))
-
-
-admin.site.unregister(PageUserGroup)
-admin.site.register(PageUserGroup, ExtendedPageUserGroupAdmin)

@@ -3,6 +3,14 @@ from setuptools import setup, find_packages
 
 dependency_links = [
     'http://github.com/pbs/django-cms/tarball/support/2.3.x#egg=django-cms-2.3.5pbs.9',
+    'http://github.com/pbs/django-admin-extend/tarball/master#egg=django-admin-extend-0.0.2',
+]
+
+dependencies = [
+    'parse',
+    'Django>=1.3,<1.5',
+    'django-cms>=2.3.5,<2.3.6',
+    'django-admin-extend',
 ]
 
 setup(
@@ -15,10 +23,7 @@ setup(
     author_email='alexandruioan.cucu@gmail.com',
     url='https://github.com/kux/django-cms-roles',
     dependency_links=dependency_links,
-    install_requires=(
-        'parse',
-        'Django>=1.3,<1.5',
-        'django-cms>=2.3.5,<2.3.6'),
+    install_requires=dependencies,
     setup_requires=[
         's3sourceuploader',
     ],
