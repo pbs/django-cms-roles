@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
+from django.forms.util import ErrorDict, ErrorList
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
@@ -18,7 +19,7 @@ from cms.models.pagemodel import Page
 from mptt.forms import TreeNodeChoiceField
 
 from cmsroles.siteadmin import get_administered_sites, \
-    get_site_users, is_site_admin
+    get_site_users, is_site_admin, get_user_roles_on_sites_ids
 from cmsroles.models import Role
 
 
@@ -51,6 +52,32 @@ class UserForm(forms.Form):
 
 
 class BaseUserFormSet(BaseFormSet):
+
+    def __init__(self, *args, **kwargs):
+        check_roles = kwargs.pop('check_roles', False)
+        super(BaseUserFormSet, self).__init__(*args, **kwargs)
+        if not check_roles:
+            return
+        for form in self.forms:
+            if not form.initial:
+                continue
+            user = form.initial['user']
+            site = form.initial['current_site']
+            roles_with_sites = get_user_roles_on_sites_ids(user)
+            roles_for_current_site = []
+            for role_id, sites_ids in roles_with_sites.items():
+                if site.id in sites_ids:
+                    roles_for_current_site.append(role_id)
+            if len(roles_for_current_site) <= 1:
+                continue
+            role_names = Role.objects.filter(
+                id__in=roles_for_current_site).values_list('name', flat=True)
+            form._errors = ErrorDict()
+            form._errors['__all__'] = ErrorList([
+                'User %s has multiple roles: %s. '
+                'A user can\'t have multiple roles in the same site. '
+                'Unassign this user until this error disappears.' % (
+                    user.email or user.username, ', '.join(role_names))])
 
     def clean(self):
         if any(self.errors):
@@ -190,7 +217,7 @@ def get_page_formset(request):
     """Returns the page formset for a given user. This is meant to
     be called via AJAX.
 
-    This is a kind of 'lazy loading' for page formsets. The page 
+    This is a kind of 'lazy loading' for page formsets. The page
     formset generation logic isn't added in the user_setup view
     because it would take to long to render all of the page formsets
     upfront.
@@ -276,7 +303,8 @@ def user_setup(request):
         initial_data = [
             {'user': user, 'role': role, 'current_site': current_site}
             for user, role in assigned_users.iteritems()]
-        user_formset = UserFormSet(initial=initial_data, prefix='user-roles')
+        user_formset = UserFormSet(initial=initial_data, prefix='user-roles',
+                                   check_roles=True)
 
     all_roles = Role.objects.all()
     role_pk_to_site_wide = dict((role.pk, role.is_site_wide) for role in all_roles)
