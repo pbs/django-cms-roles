@@ -313,6 +313,7 @@ def user_setup(request):
     context = {
         'opts': {'app_label': 'cmsroles'},
         'app_label': 'Cmsroles',
+        'title': 'User Setup',
         'administered_sites': administered_sites,
         'current_site': current_site,
         'user_formset': user_formset,
