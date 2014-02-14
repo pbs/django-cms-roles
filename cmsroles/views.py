@@ -67,6 +67,7 @@ class BaseUserFormSet(BaseFormSet):
                     % user.username)
             users.add(user)
 
+
 class BasePageFormSet(BaseFormSet):
 
     def clean(self):
@@ -89,7 +90,6 @@ def _get_user_sites(user, site_pk):
     administered_sites = get_administered_sites(user)
     if not administered_sites:
         raise PermissionDenied()
-
     if not site_pk:
         return (administered_sites[0], administered_sites)
 
@@ -124,7 +124,9 @@ def _get_site_pk(request):
     return site_pk
 
 
-def _update_site_users(request, site, assigned_users, submitted_users, user_pages):
+def _update_site_users(
+        request, site, assigned_users, submitted_users, user_pages):
+
     newly_assigned_users = {}
     existing_users = {}
     for user, role in submitted_users.iteritems():
@@ -179,6 +181,7 @@ def _get_redirect(request, site_pk):
     else:
         return HttpResponseRedirect('/admin/')
 
+
 def _get_page_form_class(current_site):
 
     class PageForm(forms.Form):
@@ -194,7 +197,7 @@ def get_page_formset(request):
     """Returns the page formset for a given user. This is meant to
     be called via AJAX.
 
-    This is a kind of 'lazy loading' for page formsets. The page 
+    This is a kind of 'lazy loading' for page formsets. The page
     formset generation logic isn't added in the user_setup view
     because it would take to long to render all of the page formsets
     upfront.
@@ -283,7 +286,8 @@ def user_setup(request):
         user_formset = UserFormSet(initial=initial_data, prefix='user-roles')
 
     all_roles = Role.objects.all()
-    role_pk_to_site_wide = dict((role.pk, role.is_site_wide) for role in all_roles)
+    role_pk_to_site_wide = dict(
+        (role.pk, role.is_site_wide) for role in all_roles)
     # so that the empty form template doesn't have an 'assign pages' link
     role_pk_to_site_wide[None] = True
     context = {

@@ -10,10 +10,14 @@ from cms.models.pagemodel import Page
 from cms.api import create_page
 
 from cmsroles.models import Role
-from cmsroles.siteadmin import (is_site_admin, get_administered_sites, get_site_users,
+from cmsroles.siteadmin import (is_site_admin, get_administered_sites,
+                                get_site_users,
                                 get_site_admin_required_permission,
                                 get_user_roles_on_sites_ids)
 import cmsroles.management.commands.manage_page_permissions as manage_page_permissions
+
+from cmsroles.views import _get_user_sites
+from django.http import Http404
 
 
 class HelpersMixin(object):
@@ -294,7 +298,7 @@ class ObjectInteractionsTests(TestCase, HelpersMixin):
             name='foo.site.com', domain='foo.site.com').delete()
 
     def test_site_deletion_with_roles(self):
-        foo_site, role  = self._setup_site_deletion('foo.site.com')
+        foo_site, role = self._setup_site_deletion('foo.site.com')
         generated_group = role.get_site_specific_group(foo_site)
         foo_site.delete()
         with self.assertRaises(GlobalPagePermission.DoesNotExist):
@@ -303,12 +307,12 @@ class ObjectInteractionsTests(TestCase, HelpersMixin):
             Group.objects.get(id=generated_group.id)
 
     def test_site_deletion_with_deleted_site_specific_group(self):
-        foo_site, role  = self._setup_site_deletion('foo.site.com')
+        foo_site, role = self._setup_site_deletion('foo.site.com')
         role.get_site_specific_group(foo_site).delete()
         foo_site.delete()
 
     def test_site_deletion_with_deleted_site_specific_permission(self):
-        foo_site, role  = self._setup_site_deletion('foo.site.com')
+        foo_site, role = self._setup_site_deletion('foo.site.com')
         role.derived_global_permissions.filter(sites=foo_site).update(group=None)
         Site.objects.get(id=foo_site.id).delete()
 
@@ -541,12 +545,6 @@ class ViewsTests(TestCase, HelpersMixin):
         robin = User.objects.get(username='robin')
         editor = Role.objects.get(name='editor')
         return foo_site, joe, admin, george, developer, robin, editor
-
-    def test_invalid_site_404(self):
-        self._create_simple_setup()
-        self.client.login(username='root', password='root')
-        response = self.client.get('/admin/cmsroles/usersetup/?site=asd')
-        self.assertEqual(response.status_code, 404)
 
     def test_change_roles(self):
         self._create_simple_setup()
@@ -798,3 +796,18 @@ class ManagePagePermissionsCommandTests(TestCase, HelpersMixin):
         self.assertEqual(len(command.errors), 1)
         self.assertNotIn(bob, writer_role.users(foo_site))
         self.assertNotIn(unmanaged_perm, writer_role.derived_page_permissions.all())
+
+
+class InvalidSiteParamTests(TestCase):
+    def setUp(self):
+        User.objects.create_superuser(
+            username='gigi', password='gigi', email='gigi@roto.com')
+        self.client.login(username='gigi', password='gigi')
+
+    def test_get_user_sites(self):
+        gigi = User.objects.get(username="gigi")
+        self.assertRaises(Http404, _get_user_sites, gigi, "1)")
+
+    def test_404_on_invalid_site(self):
+        response = self.client.get("/admin/cmsroles/usersetup/?site=1?")
+        self.assertEqual(response.status_code, 404)
