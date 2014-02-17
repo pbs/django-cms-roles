@@ -15,7 +15,7 @@ dependencies = [
 
 setup(
     name='django-cms-roles',
-    version='0.4.4',
+    version='0.4.5',
     description=('Wrapper over django-cms\' permissions that allows '
                  'for easy user management by defining roles that '
                  'span multiple sites.'),
