@@ -34,5 +34,3 @@ pytest-results.xml
 .project
 .pydevproject
 *.pyo
-
-full.log
