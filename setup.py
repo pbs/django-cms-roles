@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 dependency_links = [
-    'http://github.com/pbs/django-cms/tarball/support/2.3.x#egg=django-cms-2.3.5pbs.dev',
+    'http://github.com/pbs/django-cms/tarball/support/2.3.x#egg=django-cms-2.3.5pbs.X.dev',
     'http://github.com/pbs/django-admin-extend/tarball/master#egg=django-admin-extend-dev',
 ]
 
