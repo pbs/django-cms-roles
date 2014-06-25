@@ -14,6 +14,7 @@ from cms.models.pagemodel import Page
 import logging
 logger = logging.getLogger(__name__)
 
+import inspect
 
 def get_permission_fields():
     permission_keys = []
@@ -168,15 +169,26 @@ class Role(AbstractPagePermission):
         return dict((key, getattr(self, key))
                     for key in get_permission_fields())
 
+    def _get_group_permimssion_name_len(self):
+        """Get the """
+        site_perm_max_len = 80
+        for meta_field in self.group.__class__._meta.fields:
+            if meta_field.name == 'name':
+                site_perm_max_len = meta_field.max_length
+        return site_perm_max_len
+
     def add_site_specific_global_page_perm(self, site):
         if not self.is_site_wide:
             return
         site_group = Group.objects.get(pk=self.group.pk)
         permissions = self.group.permissions.all()
         site_group.pk = None
+
+        # don't exceed the max length of the group name
+        site_perm_max_len = self._get_group_permimssion_name_len()
         site_group.name = Role.group_name_pattern % {
-            'role_name': self.name,
-            'site_domain': site.domain}
+            'role_name': self.name[:site_perm_max_len],
+            'site_domain': site.domain[:site_perm_max_len - len(self.name)]}
         site_group.save()
         site_group.permissions = permissions
         kwargs = self._get_permissions_dict()
