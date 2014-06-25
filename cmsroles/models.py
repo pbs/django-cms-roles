@@ -14,7 +14,6 @@ from cms.models.pagemodel import Page
 import logging
 logger = logging.getLogger(__name__)
 
-import inspect
 
 def get_permission_fields():
     permission_keys = []
