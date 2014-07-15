@@ -55,6 +55,8 @@ class Role(AbstractPagePermission):
 
     is_site_wide = models.BooleanField(default=True)
 
+    group_name_pattern = '%(role_name)s-%(site_domain)s'
+
     # used when is_site_wide is True
     derived_global_permissions = models.ManyToManyField(
         GlobalPagePermission, blank=True, null=True)
@@ -176,7 +178,7 @@ class Role(AbstractPagePermission):
 
     def _generate_auth_group_name(self, site, max_len):
         """Generate auth group name"""
-        group_name = '%(role_name)s-%(site_domain)s' % {
+        group_name = self.group_name_pattern % {
             'role_name': self.name,
             'site_domain': site.domain}
         # make sure we don't exceed the maximum auth_group.name length
