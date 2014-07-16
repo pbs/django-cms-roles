@@ -51,11 +51,11 @@ class Role(AbstractPagePermission):
         verbose_name_plural = _('roles')
         permissions = (('user_setup', 'Can access user setup'),)
 
-    group_name_pattern = '%(role_name)s-%(site_domain)s'
-
     name = models.CharField(max_length=50, unique=True)
 
     is_site_wide = models.BooleanField(default=True)
+
+    group_name_pattern = '%(role_name)s-%(site_domain)s'
 
     # used when is_site_wide is True
     derived_global_permissions = models.ManyToManyField(
@@ -98,9 +98,9 @@ class Role(AbstractPagePermission):
                 group.permissions = new_group_permissions
 
             if update_names:
-                group.name = Role.group_name_pattern % {
-                    'role_name': self.name,
-                    'site_domain': site.domain}
+                group.name = self._generate_auth_group_name(
+                    site=site,
+                    max_len=self._get_auth_group_name_len())
                 group.save()
 
     def _propagate_perm_changes(self, derived_perms):
@@ -168,15 +168,34 @@ class Role(AbstractPagePermission):
         return dict((key, getattr(self, key))
                     for key in get_permission_fields())
 
+    def _get_auth_group_name_len(self):
+        """Get the max length of the auth_group.name DB field"""
+        site_perm_max_len = 80
+        for meta_field in self.group.__class__._meta.fields:
+            if meta_field.name == 'name':
+                site_perm_max_len = meta_field.max_length
+        return site_perm_max_len
+
+    def _generate_auth_group_name(self, site, max_len):
+        """Generate auth group name"""
+        group_name = self.group_name_pattern % {
+            'role_name': self.name,
+            'site_domain': site.domain}
+        # make sure we don't exceed the maximum auth_group.name length
+        if len(group_name) > max_len:
+            tail = '~%s' % str(site.pk)
+            group_name = group_name[:max_len - len(tail)] + tail
+        return group_name
+
     def add_site_specific_global_page_perm(self, site):
         if not self.is_site_wide:
             return
         site_group = Group.objects.get(pk=self.group.pk)
         permissions = self.group.permissions.all()
         site_group.pk = None
-        site_group.name = Role.group_name_pattern % {
-            'role_name': self.name,
-            'site_domain': site.domain}
+        site_group.name = self._generate_auth_group_name(
+            site=site,
+            max_len=self._get_auth_group_name_len())
         site_group.save()
         site_group.permissions = permissions
         kwargs = self._get_permissions_dict()
