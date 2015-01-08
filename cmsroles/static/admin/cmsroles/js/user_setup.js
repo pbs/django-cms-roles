@@ -91,6 +91,10 @@ django.jQuery(document).ready(function(){
 
     function fetch_pages(user_settings, hooks){
         var user_role_pair = get_user_and_role(user_settings);
+        if (!user_role_pair.user.val() || !user_role_pair.role.val()){
+            hooks.error_hook(false);
+            return;
+        }
         var current_site = $('#site_selector').find(":selected").val()
         toggleEnableFormSubmit(false);
         $.ajax({
