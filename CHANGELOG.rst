@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+Revision 10fdd5b (13.01.2015, 09:35 UTC)
+----------------------------------------
+
+* LUN-1963
+
+  * souldn't fetch pages when user or role is missing
+
+No other commits.
+
 Revision 756a603 (17.07.2014, 14:51 UTC)
 ----------------------------------------
 
