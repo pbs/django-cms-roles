@@ -7,7 +7,6 @@ dependency_links = [
 ]
 
 dependencies = [
-    'parse',
     'Django>=1.3,<1.5',
     'django-cms>=2.3.5,<2.3.6',
     'django-admin-extend',
