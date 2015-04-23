@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+Revision b184c57 (23.04.2015, 15:37 UTC)
+----------------------------------------
+
+No new issues.
+
+* Misc commits
+
+  * parse no longer needed
+
 Revision 10fdd5b (13.01.2015, 09:35 UTC)
 ----------------------------------------
 
