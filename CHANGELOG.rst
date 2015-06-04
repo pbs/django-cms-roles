@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+Revision ef03251 (04.06.2015, 17:09 UTC)
+----------------------------------------
+
+No new issues.
+
+* Misc commits
+
+  * Changed version to one that describes this as a pbs fork
+
 Revision b184c57 (23.04.2015, 15:37 UTC)
 ----------------------------------------
 
