@@ -8,10 +8,9 @@
 {% load dict_lookup %}
 
 {% block extrastyle %}
-  {% load adminmedia %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}cmsroles/css/user_setup.css"/>
-  <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}cmsroles/css/chosen.css"/>
+  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/cmsroles/css/user_setup.css"/>
+  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/cmsroles/css/chosen.css"/>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -78,11 +77,11 @@ document.roles = {
 }
 </script>
 
-<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}js/jquery.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}js/jquery.init.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}cmsroles/js/chosen.jquery.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}cmsroles/js/jquery.formset.js"></script>
-<script type="text/javascript" src="{% admin_media_prefix %}cmsroles/js/user_setup.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/chosen.jquery.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/jquery.formset.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/user_setup.js"></script>
 {% endblock %}
