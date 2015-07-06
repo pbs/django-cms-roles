@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
-from django.utils import simplejson
 from django.core.management import call_command
 
 from cms.models.permissionmodels import GlobalPagePermission, PagePermission
@@ -18,6 +17,7 @@ import cmsroles.management.commands.manage_page_permissions as manage_page_permi
 
 from cmsroles.views import _get_user_sites
 from django.http import Http404
+import json
 
 
 class HelpersMixin(object):
@@ -734,7 +734,7 @@ class ViewsTests(TestCase, HelpersMixin):
                 u'role': writer.pk,
                 u'site': bar_site.pk}
             )
-        content = simplejson.loads(response.content)
+        content = json.loads(response.content)
         page_formset = content[u'page_formset']
         # this assert is a bit ugly, but since the formset is already
         # rendered, I don't see any other way to verify that

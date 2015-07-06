@@ -11,7 +11,6 @@ INSTALLED_APPS = [
     'cms',
     'mptt',
     'menus',
-    'south',
     'sekizai',
     'cmsroles',
 ]
@@ -59,4 +58,4 @@ TEMPLATE_LOADERS = (
     )
 CACHE_BACKEND = 'locmem:///'
 
-SOUTH_TESTS_MIGRATE = False
+SECRET_KEY = 'secret'

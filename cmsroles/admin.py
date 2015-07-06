@@ -95,9 +95,9 @@ class ExtendedGroupAdmin(registered_modeladmin(Group)):
             qs = Group.objects.all()
         return qs.filter(globalpagepermission__role__isnull=True).distinct()
 
-    def queryset(self, request):
+    def get_queryset(self, request):
         return self.get_filtered_queryset(
-            super(ExtendedGroupAdmin, self).queryset(request))
+            super(ExtendedGroupAdmin, self).get_queryset(request))
 
 
 class ExtendedUserForm(registered_form(User)):
@@ -129,8 +129,8 @@ class ExtendedUserAdmin(registered_modeladmin(User)):
 @extend_registered
 class ExtendedGlobalPagePermssionAdmin(registered_modeladmin(GlobalPagePermission)):
 
-    def queryset(self, request):
-        qs = super(ExtendedGlobalPagePermssionAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(ExtendedGlobalPagePermssionAdmin, self).get_queryset(request)
         return qs.filter(role__isnull=True)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -143,6 +143,6 @@ class ExtendedGlobalPagePermssionAdmin(registered_modeladmin(GlobalPagePermissio
 @extend_registered
 class ExtendedPageUserGroupAdmin(registered_modeladmin(PageUserGroup)):
 
-    def queryset(self, request):
+    def get_queryset(self, request):
         qs = ExtendedGroupAdmin.get_filtered_queryset(
-            super(ExtendedPageUserGroupAdmin, self).queryset(request))
+            super(ExtendedPageUserGroupAdmin, self).get_queryset(request))
