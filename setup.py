@@ -23,9 +23,6 @@ setup(
     url='https://github.com/kux/django-cms-roles',
     dependency_links=dependency_links,
     install_requires=dependencies,
-    setup_requires=[
-        's3sourceuploader',
-    ],
     packages=find_packages(),
     include_package_data=True,
 )
