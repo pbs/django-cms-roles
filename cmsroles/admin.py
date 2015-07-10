@@ -40,14 +40,20 @@ class RoleAdmin(admin.ModelAdmin):
         return actions
 
 
-class UserSetup(models.Model):
+class UserSetup(object):
     """Dummy model without any associated db table.
     It's only purpose is to provide an additional
     entry in the admin index.
     """
-    class Meta:
+    class _meta:
+        app_label = 'cmsroles'  # This is the app that the form will exist under
+        model_name = 'usersetup'  # This is what will be used in the link url
+        object_name = 'User Setup'
         verbose_name_plural = 'User Setup'
+        verbose_name = 'User Setup'
         permissions = ()
+        swapped = False
+        abstract = False
 
 
 class UserSetupAdmin(admin.ModelAdmin):
@@ -66,7 +72,7 @@ class UserSetupAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Role, RoleAdmin)
-admin.site.register(UserSetup, UserSetupAdmin)
+admin.site.register([UserSetup], UserSetupAdmin)
 
 
 class ExtendedGroupForm(registered_form(Group)):

@@ -57,5 +57,5 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
     )
 CACHE_BACKEND = 'locmem:///'
-
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 SECRET_KEY = 'secret'

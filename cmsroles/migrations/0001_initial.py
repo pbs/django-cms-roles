@@ -43,15 +43,4 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
-        migrations.CreateModel(
-            name='UserSetup',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-            ],
-            options={
-                'verbose_name_plural': 'User Setup',
-                'permissions': (),
-            },
-            bases=(models.Model,),
-        ),
     ]
