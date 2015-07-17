@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+Revision b5005c8 (17.07.2015, 13:29 UTC)
+----------------------------------------
+
+No new issues.
+
+* Misc commits
+
+  * tox: Don't allow django 1.8 prereleases
+  * Django 1.7 upgrade: fixed usersetup 'model' to not generate table
+  * s3sourceuploader no longer required
+  * django 1.7 upgrade: generated new migrations; fixed tests and deprecation warnings
+  * Django 1.6 upghrade: fixed imports & admin media tag
+
 Revision ef03251 (04.06.2015, 17:09 UTC)
 ----------------------------------------
 
