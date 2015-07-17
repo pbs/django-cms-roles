@@ -1,15 +1,15 @@
-{% load dict_lookup adminmedia %}
+{% load dict_lookup %}
 
 <div class="user_settings">
   {{ form.as_p }}
-  <img class="waiting-change" src="{% admin_media_prefix %}cmsroles/img/ajax-loader.gif"/>
+  <img class="waiting-change" src="{{ STATIC_URL }}admin/cmsroles/img/ajax-loader.gif"/>
   <div></div> <!-- this is just for breakign the inline-blocks -->
   {% with page_formset=page_formsets|get_item:form.user.value %}
     {% if  page_formset %}
       {% include "admin/cmsroles/page_formset.html" %}
     {% else %}
       <a class="assign-pages" href="#">Assign pages</a>
-      <img class="waiting-pages" src="{% admin_media_prefix %}cmsroles/img/ajax-loader.gif"/>
+      <img class="waiting-pages" src="{{ STATIC_URL }}admin/cmsroles/img/ajax-loader.gif"/>
     {% endif %}
   {% endwith %}
 </div>

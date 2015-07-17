@@ -12,7 +12,6 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.utils.encoding import smart_unicode
-from django.utils import simplejson
 
 from cms.models.pagemodel import Page
 
@@ -21,6 +20,7 @@ from mptt.forms import TreeNodeChoiceField
 from cmsroles.siteadmin import get_administered_sites, \
     get_site_users, is_site_admin, get_user_roles_on_sites_ids
 from cmsroles.models import Role
+from django.http import JsonResponse
 
 
 class UserChoiceField(forms.ModelChoiceField):
@@ -241,12 +241,11 @@ def get_page_formset(request):
     role = Role.objects.get(pk=role_pk)
     user = User.objects.get(pk=user_pk)
     if role.is_site_wide:
-        return HttpResponse(simplejson.dumps({
-                    'success': False,
-                    'error_msg': 'This role was changed to being site '\
-                        'wide in the meanwhile. The assign pages link is '\
-                        'obsolete'}),
-                            content_type="application/json")
+        return JsonResponse({
+            'success': False,
+            'error_msg': 'This role was changed to being site '\
+                'wide in the meanwhile. The assign pages link is '\
+                'obsolete'})
     page_perms = role.get_user_page_perms(user, current_site)
     page_formset = PageFormSet(
         initial=[{'page': page_perm.page} for page_perm in page_perms],
@@ -256,8 +255,7 @@ def get_page_formset(request):
         Context({'page_formset': page_formset}))
     response = {'page_formset': rendered_formset,
                 'success': True}
-    return HttpResponse(simplejson.dumps(response),
-                        content_type="application/json")
+    return JsonResponse(response)
 
 
 def _formset_available(request, user):
@@ -269,7 +267,7 @@ def _get_page_formset_prefix(user):
 
 
 @user_passes_test(is_site_admin, login_url='/admin/')
-@transaction.commit_on_success
+@transaction.atomic
 def user_setup(request):
     site_pk = _get_site_pk(request)
     current_site, administered_sites = _get_user_sites(request.user, site_pk)

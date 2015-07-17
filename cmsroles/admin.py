@@ -40,14 +40,20 @@ class RoleAdmin(admin.ModelAdmin):
         return actions
 
 
-class UserSetup(models.Model):
+class UserSetup(object):
     """Dummy model without any associated db table.
     It's only purpose is to provide an additional
     entry in the admin index.
     """
-    class Meta:
+    class _meta:
+        app_label = 'cmsroles'  # This is the app that the form will exist under
+        model_name = 'usersetup'  # This is what will be used in the link url
+        object_name = 'User Setup'
         verbose_name_plural = 'User Setup'
+        verbose_name = 'User Setup'
         permissions = ()
+        swapped = False
+        abstract = False
 
 
 class UserSetupAdmin(admin.ModelAdmin):
@@ -66,7 +72,7 @@ class UserSetupAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Role, RoleAdmin)
-admin.site.register(UserSetup, UserSetupAdmin)
+admin.site.register([UserSetup], UserSetupAdmin)
 
 
 class ExtendedGroupForm(registered_form(Group)):
@@ -95,9 +101,9 @@ class ExtendedGroupAdmin(registered_modeladmin(Group)):
             qs = Group.objects.all()
         return qs.filter(globalpagepermission__role__isnull=True).distinct()
 
-    def queryset(self, request):
+    def get_queryset(self, request):
         return self.get_filtered_queryset(
-            super(ExtendedGroupAdmin, self).queryset(request))
+            super(ExtendedGroupAdmin, self).get_queryset(request))
 
 
 class ExtendedUserForm(registered_form(User)):
@@ -129,8 +135,8 @@ class ExtendedUserAdmin(registered_modeladmin(User)):
 @extend_registered
 class ExtendedGlobalPagePermssionAdmin(registered_modeladmin(GlobalPagePermission)):
 
-    def queryset(self, request):
-        qs = super(ExtendedGlobalPagePermssionAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        qs = super(ExtendedGlobalPagePermssionAdmin, self).get_queryset(request)
         return qs.filter(role__isnull=True)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -143,6 +149,6 @@ class ExtendedGlobalPagePermssionAdmin(registered_modeladmin(GlobalPagePermissio
 @extend_registered
 class ExtendedPageUserGroupAdmin(registered_modeladmin(PageUserGroup)):
 
-    def queryset(self, request):
+    def get_queryset(self, request):
         qs = ExtendedGroupAdmin.get_filtered_queryset(
-            super(ExtendedPageUserGroupAdmin, self).queryset(request))
+            super(ExtendedPageUserGroupAdmin, self).get_queryset(request))

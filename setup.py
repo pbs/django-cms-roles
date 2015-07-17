@@ -7,7 +7,7 @@ dependency_links = [
 ]
 
 dependencies = [
-    'Django>=1.3,<1.5',
+    'Django>=1.7,<1.8',
     'django-cms>=2.3.5,<2.3.6',
     'django-admin-extend',
 ]
@@ -23,9 +23,6 @@ setup(
     url='https://github.com/kux/django-cms-roles',
     dependency_links=dependency_links,
     install_requires=dependencies,
-    setup_requires=[
-        's3sourceuploader',
-    ],
     packages=find_packages(),
     include_package_data=True,
 )
