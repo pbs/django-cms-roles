@@ -15,9 +15,15 @@
 
 {% block breadcrumbs %}
   <div class="breadcrumbs">
-    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ app_label|capfirst|escape }}</a>
-    &rsaquo; User Setup
+    <ul class="breadcrumb">
+        <li>
+          <i class="ace-icon fa fa-home home-icon"></i>
+            <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+        </li>
+
+      <li><a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ app_label|capfirst|escape }}</a></li>
+      <li>User Setup</li>
+    </ul>
   </div>
 {% endblock %}
 
