@@ -28,31 +28,35 @@
 {% endblock %}
 
 {% block content %}
-<div class="module aligned" id="site_selection">
-<p>
-  <label for="site_selector"><strong>Select site:</strong></label>
-  <select id="site_selector">
-    {% for site in administered_sites %}
-      <option value="{{site.pk}}"
-              {% if site.pk == current_site.pk %}
-                selected="selected"
-              {% endif %}
-              >
-        {{site.name}}
-      </option>
-    {% endfor %}
-  </select>
-</p>
-</div>
+<fieldset class="module aligned form-horizontal" id="site_selection">
+  <div class="col-sm-3 control-label no-padding-right">
+    <label for="site_selector">Select site:</label>
+  </div>
+  <div class="col-sm-9">
+    <select id="site_selector">
+      {% for site in administered_sites %}
+        <option value="{{site.pk}}"
+                {% if site.pk == current_site.pk %}
+                  selected="selected"
+                {% endif %}
+                >
+          {{site.name}}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+</fieldset>
 
-<div class="module aligned" id="user_search">
-<p>
-  <label for="search_box"><strong>Search user: </strong></label>
-  <input id="search_box" name="search_box" type="text"/>
-</p>
-</div>
-
-<div class="module aligned">
+<fieldset class="module aligned form-horizontal" id="user_search">
+   <div class="col-sm-3 control-label no-padding-right">
+    <label for="search_box">Search user:</label>
+  </div>
+  <div class="col-sm-9">
+    <input id="search_box" name="search_box" type="text"/>
+  </div>
+</fieldset>
+<br>
+<div class="inline-group">
   <form id="user_formset" method="post" action="" style="
     {% if user_formset|length == 0 %}
        display: none;
@@ -62,6 +66,8 @@
     {{ user_formset.management_form }}
     {{ user_formset.non_form_errors }}
     <div id="user_formset_fields">
+      <h4 class="header smaller lighter blue block">Users</h4>
+
       {% for form in user_formset %}
         {% include "admin/cmsroles/user_form.html" %}
       {% endfor %}
@@ -70,9 +76,9 @@
   </form>
 </div>
 
-<div class="submit-row">
-  <input id="save" type="submit" class="default" value="Save" />
-  <input id="save_and_continue" type="submit" value="Save and continue editing" />
+<div class="submit-row form-actions text-right no-margin-bottom no-background">
+  <input id="save_and_continue" class="default btn btn-info" type="submit" value="Save and continue editing" />
+  <input id="save" type="submit" class="btn btn-primary btn-primary"  value="Save" />
 </div>
 
 <script type="text/javascript">
