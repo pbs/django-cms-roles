@@ -22,7 +22,7 @@ from cmsroles.siteadmin import get_administered_sites, \
 from cmsroles.models import Role
 from django.http import JsonResponse
 
-from settings import USE_BOOTSTRAP_ACE
+from cmsroles.settings import USE_BOOTSTRAP_ACE
 
 
 class UserChoiceField(forms.ModelChoiceField):
