@@ -6,29 +6,27 @@
     padding-top: 5px;
 }
 
-#search_box{
-    width: 570px;
-}
-
 #site_selection p{
     padding-top: 6px;
 }
 
 .user_settings {
-    padding-top: 3px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ccc;
+    padding-top: 10px;
     position: relative;
 }
-
-.user_settings p{
+.user_settings label {
+    margin-top: 7px;
+    margin-right: 15px;
+    margin-left: 8px;
+}
+.user_settings p {
     display: inline-block;
+    width: 48%;
+    margin-bottom: 0;
 }
-
-#content select{
-    width: 580px;
+.user_settings p .chosen-container {
+    width: 84% !important
 }
-
 #add_user_section{
     margin-top: 30px;
 }
@@ -38,7 +36,6 @@
 }
 
 #add_user_form p:not(:last-child){
-    border-bottom: 1px solid #eee;
     padding-bottom: 10px;
 }
 
@@ -56,31 +53,47 @@
 }
 
 .add-row{
-    background: url(../img/icon_addlink.gif) 0 .2em no-repeat;
-    padding-left: 14px;
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: 5px;
     display: block;
 }
-
-.assign-pages{
-    background: url(../img/icon_addlink.gif) 0 .2em no-repeat;
-    padding-left: 14px;
+.add-row:before {
+    content: "\f067";
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    text-rendering: auto;
+    margin-right: 5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.assign-pages {
     margin-left: 5px;
     display: inline-block;
 }
-
-.delete-row{
-    text-indent: -9999px;
-    width: 15px;
-    height: 15px;
-    border: 0px none;
-    outline: 0;
-    background: transparent url(../img/inline-delete.png) no-repeat;
+.assign-pages:before {
+    content: "\f067";
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    text-rendering: auto;
+    margin-right: 5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.delete-row {
     position: absolute;
-    right: 5px;
-    top: 5px;
+    right: 10px;
+    top: 20px;
+}
+.delete-row:before {
+  content: "\f014";
+  display: inline-block;
+  font: normal normal normal 16px/1 FontAwesome;
+  text-rendering: auto;
+  margin-left: 15px;
+  color: #d15b47;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .page_form{
