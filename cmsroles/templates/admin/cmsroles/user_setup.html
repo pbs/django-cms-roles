@@ -9,91 +9,88 @@
 
 {% block extrastyle %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/cmsroles/css/user_setup.css"/>
+
+  {% if not user_formset.use_ace_theme %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/cmsroles/css/user_setup.css"/>
+  {% else %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/cmsroles/css/ace_user_setup.css"/>
+  {% endif %}
   <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/cmsroles/css/chosen.css"/>
 {% endblock %}
 
 {% block breadcrumbs %}
   <div class="breadcrumbs">
-    <ul class="breadcrumb">
-        <li>
-          <i class="ace-icon fa fa-home home-icon"></i>
-            <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-        </li>
-
-      <li><a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ app_label|capfirst|escape }}</a></li>
-      <li>User Setup</li>
-    </ul>
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ app_label|capfirst|escape }}</a>
+    &rsaquo; User Setup
   </div>
 {% endblock %}
 
-{% block content %}
-<fieldset class="module aligned form-horizontal" id="site_selection">
-  <div class="col-sm-3 control-label no-padding-right">
-    <label for="site_selector">Select site:</label>
-  </div>
-  <div class="col-sm-9">
-    <select id="site_selector">
-      {% for site in administered_sites %}
-        <option value="{{site.pk}}"
-                {% if site.pk == current_site.pk %}
-                  selected="selected"
-                {% endif %}
-                >
-          {{site.name}}
-        </option>
-      {% endfor %}
-    </select>
-  </div>
-</fieldset>
-
-<fieldset class="module aligned form-horizontal" id="user_search">
-   <div class="col-sm-3 control-label no-padding-right">
-    <label for="search_box">Search user:</label>
-  </div>
-  <div class="col-sm-9">
-    <input id="search_box" name="search_box" type="text"/>
-  </div>
-</fieldset>
-<br>
-<div class="inline-group">
-  <form id="user_formset" method="post" action="" style="
-    {% if user_formset|length == 0 %}
-       display: none;
-    {% endif %}
-  ">
-    {% csrf_token %}
-    {{ user_formset.management_form }}
-    {{ user_formset.non_form_errors }}
-    <div id="user_formset_fields">
-      <h4 class="header smaller lighter blue block">Users</h4>
-
-      {% for form in user_formset %}
-        {% include "admin/cmsroles/user_form.html" %}
-      {% endfor %}
+{% block content %} 
+  {% if not user_formset.use_ace_theme %}
+    <div class="module aligned" id="site_selection">
+    <p>
+      <label for="site_selector"><strong>Select site:</strong></label>
+      <select id="site_selector">
+        {% for site in administered_sites %}
+          <option value="{{site.pk}}"
+                  {% if site.pk == current_site.pk %}
+                    selected="selected"
+                  {% endif %}
+                  >
+            {{site.name}}
+          </option>
+        {% endfor %}
+      </select>
+    </p>
     </div>
-    <input id="next_on_save" name="next" type="hidden" value="continue"/>
-  </form>
-</div>
 
-<div class="submit-row form-actions text-right no-margin-bottom no-background">
-  <input id="save_and_continue" class="default btn btn-info" type="submit" value="Save and continue editing" />
-  <input id="save" type="submit" class="btn btn-primary btn-primary"  value="Save" />
-</div>
+    <div class="module aligned" id="user_search">
+    <p>
+      <label for="search_box"><strong>Search user: </strong></label>
+      <input id="search_box" name="search_box" type="text"/>
+    </p>
+    </div>
 
-<script type="text/javascript">
-document.roles = {
-  {% for role, is_site_wide in role_pk_to_site_wide_js %}
-     '{{ role }}': {{ is_site_wide }} ,
-  {% endfor %}
-}
-</script>
+    <div class="module aligned">
+      <form id="user_formset" method="post" action="" style="
+        {% if user_formset|length == 0 %}
+           display: none;
+        {% endif %}
+      ">
+        {% csrf_token %}
+        {{ user_formset.management_form }}
+        {{ user_formset.non_form_errors }}
+        <div id="user_formset_fields">
+          {% for form in user_formset %}
+            {% include "admin/cmsroles/user_form.html" %}
+          {% endfor %}
+        </div>
+        <input id="next_on_save" name="next" type="hidden" value="continue"/>
+      </form>
+    </div>
 
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.init.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/chosen.jquery.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/jquery.formset.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/user_setup.js"></script>
+    <div class="submit-row">
+      <input id="save" type="submit" class="default" value="Save" />
+      <input id="save_and_continue" type="submit" value="Save and continue editing" />
+    </div>
+  {% else %}
+    {% include "admin/cmsroles/ace_user_setup.html" %}
+  {% endif %}
+  
+  <script type="text/javascript">
+  document.roles = {
+    {% for role, is_site_wide in role_pk_to_site_wide_js %}
+       '{{ role }}': {{ is_site_wide }} ,
+    {% endfor %}
+  }
+  </script>
+
+  <script type="text/javascript" src="{{ STATIC_URL }}admin/js/core.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}admin/js/admin/RelatedObjectLookups.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.init.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/chosen.jquery.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/jquery.formset.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}admin/cmsroles/js/user_setup.js"></script>
 {% endblock %}

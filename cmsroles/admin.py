@@ -11,8 +11,7 @@ from cms.models.permissionmodels import PageUser, PageUserGroup, GlobalPagePermi
 from admin_extend.extend import (
     registered_modeladmin, registered_form, extend_registered)
 
-
-class RoleForm(ModelForm):
+class RoleForm(ModelForm):       
     group = ModelChoiceField(
         queryset=Group.objects.filter(
             globalpagepermission__isnull=True),
@@ -41,6 +40,7 @@ class RoleAdmin(admin.ModelAdmin):
 
 
 class UserSetup(object):
+
     """Dummy model without any associated db table.
     It's only purpose is to provide an additional
     entry in the admin index.
@@ -107,7 +107,7 @@ class ExtendedGroupAdmin(registered_modeladmin(Group)):
 
 
 class ExtendedUserForm(registered_form(User)):
-
+    
     def clean_groups(self):
         active = self.cleaned_data.get('is_active', True)
         if not active:

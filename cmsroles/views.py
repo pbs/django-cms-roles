@@ -22,6 +22,8 @@ from cmsroles.siteadmin import get_administered_sites, \
 from cmsroles.models import Role
 from django.http import JsonResponse
 
+from settings import USE_BOOTSTRAP_ACE
+
 
 class UserChoiceField(forms.ModelChoiceField):
 
@@ -52,6 +54,7 @@ class UserForm(forms.Form):
 
 
 class BaseUserFormSet(BaseFormSet):
+    use_ace_theme = USE_BOOTSTRAP_ACE
 
     def __init__(self, *args, **kwargs):
         check_roles = kwargs.pop('check_roles', False)
