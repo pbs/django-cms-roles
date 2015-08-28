@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+Revision 0ae451d (28.08.2015, 07:21 UTC)
+----------------------------------------
+
+* LUN-2310
+
+  * checkout the admin.py file since it has no updates
+  * remaining of flag for Ace theme
+  * flag created for keeping the default look of the form if Ace theme is not activated
+  * user setup page updated
+  * breadcrumbs updated
+
+No other commits.
+
 Revision b5005c8 (17.07.2015, 13:29 UTC)
 ----------------------------------------
 
