@@ -1,8 +1,8 @@
   <fieldset class="module aligned form-horizontal" id="site_selection">
-    <div class="col-sm-3 control-label no-padding-right">
+    <div class="col-sm-2 control-label text-left">
       <label for="site_selector">Select site:</label>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-9 no-padding-left">
       <select id="site_selector">
         {% for site in administered_sites %}
           <option value="{{site.pk}}"
@@ -18,10 +18,10 @@
   </fieldset>
 
   <fieldset class="module aligned form-horizontal" id="user_search">
-     <div class="col-sm-3 control-label no-padding-right">
+     <div class="col-sm-2 control-label text-left">
       <label for="search_box">Search user:</label>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-9 no-padding-left">
       <input id="search_box" name="search_box" type="text"/>
     </div>
   </fieldset>
