@@ -59,11 +59,11 @@ class Role(AbstractPagePermission):
 
     # used when is_site_wide is True
     derived_global_permissions = models.ManyToManyField(
-        GlobalPagePermission, blank=True, null=True)
+        GlobalPagePermission, blank=True)
 
     # used when is_site_wide is False
     derived_page_permissions = models.ManyToManyField(
-        PagePermission, blank=True, null=True)
+        PagePermission, blank=True)
 
     def __unicode__(self):
         return self.name

@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
-from django.forms.util import ErrorDict, ErrorList
+from django.forms.utils import ErrorDict, ErrorList
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context

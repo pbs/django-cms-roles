@@ -3,7 +3,6 @@
 {% load staticfiles %}
 
 {% load i18n admin_static admin_modify %}
-{% load url from future %}
 {% load admin_urls %}
 {% load dict_lookup %}
 
@@ -26,7 +25,7 @@
   </div>
 {% endblock %}
 
-{% block content %} 
+{% block content %}
   {% if not user_formset.use_ace_theme %}
     <div class="module aligned" id="site_selection">
     <p>
@@ -77,7 +76,7 @@
   {% else %}
     {% include "admin/cmsroles/ace_user_setup.html" %}
   {% endif %}
-  
+
   <script type="text/javascript">
   document.roles = {
     {% for role, is_site_wide in role_pk_to_site_wide_js %}
