@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+Revision bb049f1 (11.09.2015, 13:59 UTC)
+----------------------------------------
+
+* LUN-2620
+
+  * added icons to buttons on user setup form
+
+No other commits.
+
 Revision aff4570 (04.09.2015, 09:03 UTC)
 ----------------------------------------
 
