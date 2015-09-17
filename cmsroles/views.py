@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.contrib import admin
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction
@@ -332,5 +333,6 @@ def user_setup(request):
             (role.pk, 'true' if role.is_site_wide else 'false')
             for role in all_roles],
         'role_pk_to_site_wide': role_pk_to_site_wide}
+    context.update(admin.site.each_context(request))
     return render_to_response('admin/cmsroles/user_setup.html', context,
                               context_instance=RequestContext(request))
