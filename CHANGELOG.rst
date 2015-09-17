@@ -1,6 +1,24 @@
 CHANGELOG
 =========
 
+Revision bb049f1 (11.09.2015, 13:59 UTC)
+----------------------------------------
+
+* LUN-2620
+
+  * added icons to buttons on user setup form
+
+No other commits.
+
+Revision aff4570 (04.09.2015, 09:03 UTC)
+----------------------------------------
+
+* LUN-2596
+
+  * left align form
+
+No other commits.
+
 Revision 0ae451d (28.08.2015, 07:21 UTC)
 ----------------------------------------
 
