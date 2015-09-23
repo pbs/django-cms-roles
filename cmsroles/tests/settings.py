@@ -21,26 +21,40 @@ CMS_PERMISSION = True
 STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 ROOT_URLCONF = 'cmsroles.tests.urls'
-TEMPLATE_CONTEXT_PROCESSORS = [
-    "django.contrib.auth.context_processors.auth",
-    'django.contrib.messages.context_processors.messages',
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.request",
-    "django.core.context_processors.media",
-    'django.core.context_processors.csrf',
-    "cms.context_processors.media",
-    "sekizai.context_processors.sekizai",
-    "django.core.context_processors.static",
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'OPTIONS': {
+            'context_processors': (
+                "django.contrib.auth.context_processors.auth",
+                'django.contrib.messages.context_processors.messages',
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.template.context_processors.media",
+                'django.template.context_processors.csrf',
+                "cms.context_processors.media",
+                "sekizai.context_processors.sekizai",
+                "django.template.context_processors.static",
+            ),
+            'loaders': (
+                'cmsroles.tests.utils.MockLoader',
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ),
+            'debug': False
+        },
+    },
 ]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME' : 'test.db', # Or path to database file if using sqlite3.
-        'USER' : '', # Not used with sqlite3.
-        'PASSWORD' : '', # Not used with sqlite3.
-        'HOST' : '', # Set to empty string for localhost. Not used with sqlite3.
-        'PORT' : '', # Set to empty string for default. Not used with sqlite3.
+        'NAME': 'test.db',  # Or path to database file if using sqlite3.
+        'USER': '',  # Not used with sqlite3.
+        'PASSWORD': '',  # Not used with sqlite3.
+        'HOST': '',  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',  # Set to empty string for default. Not used with sqlite3.
     }
 }
 MIDDLEWARE_CLASSES = (
@@ -51,11 +65,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
-TEMPLATE_LOADERS = (
-    'cmsroles.tests.utils.MockLoader',
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    )
 CACHE_BACKEND = 'locmem:///'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 SECRET_KEY = 'secret'

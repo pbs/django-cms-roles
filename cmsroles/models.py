@@ -59,11 +59,11 @@ class Role(AbstractPagePermission):
 
     # used when is_site_wide is True
     derived_global_permissions = models.ManyToManyField(
-        GlobalPagePermission, blank=True, null=True)
+        GlobalPagePermission, blank=True)
 
     # used when is_site_wide is False
     derived_page_permissions = models.ManyToManyField(
-        PagePermission, blank=True, null=True)
+        PagePermission, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -90,7 +90,7 @@ class Role(AbstractPagePermission):
             new_group_permissions = self.group.permissions.all()
 
         global_perm_q = self.derived_global_permissions.select_related(
-            'group', 'sites')
+            'group').prefetch_related('sites')
         site_groups = [(global_perm.group, global_perm.sites.all()[0])
                        for global_perm in global_perm_q]
         for group, site in site_groups:
