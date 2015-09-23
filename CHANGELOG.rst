@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+Revision a1735b8 (23.09.2015, 15:32 UTC)
+----------------------------------------
+
+No new issues.
+
+* Misc commits
+
+  * Django 1.8: updated extra context for admin view.
+  * Django 1.8 upgrade: removed some django1.9 deprecation warnings
+  * Django 1.8 upgrade: updated settings & versions. fixed select_related call
+
 Revision bb049f1 (11.09.2015, 13:59 UTC)
 ----------------------------------------
 
