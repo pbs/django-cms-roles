@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+Revision 75f8466 (01.10.2015, 12:21 UTC)
+----------------------------------------
+
+No new issues.
+
+* Misc commits
+
+  * Add missing migration 0002.
+
 Revision a1735b8 (23.09.2015, 15:32 UTC)
 ----------------------------------------
 
