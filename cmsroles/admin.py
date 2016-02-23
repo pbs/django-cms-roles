@@ -72,6 +72,10 @@ class UserSetupAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id=None, *args, **kwargs):
         if object_id:
+            # UserSetup is not a model, so the normal execution will fail
+            # before reaching has_change_permission() because Django will try to
+            # retrive the db object first.
+            # Instead disallow all object specific change view operations here.
             raise PermissionDenied()
         return super(self, UserSetupAdmin).change_view(self, request, object_id, *args, **kwargs)
 
