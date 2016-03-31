@@ -758,6 +758,11 @@ class ViewsTests(TestCase, HelpersMixin):
         # used to return the same group object multiple times
         self.assertListEqual(list(displayed_objects), [site_admin_group])
 
+    def test_change_view_not_accessible(self):
+        self.client.login(username='root', password='root')
+        response = self.client.get('/admin/cmsroles/usersetup/0/')
+        self.assertEqual(response.status_code, 403)
+
 
 class ManagePagePermissionsCommandTests(TestCase, HelpersMixin):
 

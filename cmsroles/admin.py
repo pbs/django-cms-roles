@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group, User
 from django.contrib import admin
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.db import models
 from django.forms import ModelForm, ModelChoiceField
 from django.db.models import Q
@@ -69,6 +69,15 @@ class UserSetupAdmin(admin.ModelAdmin):
         #   have at least one site under their control
         user = request.user
         return is_site_admin(user) and len(get_administered_sites(user)) > 0
+
+    def change_view(self, request, object_id=None, *args, **kwargs):
+        if object_id:
+            # UserSetup is not a model, so the normal execution will fail
+            # before reaching has_change_permission() because Django will try to
+            # retrive the db object first.
+            # Instead disallow all object specific change view operations here.
+            raise PermissionDenied()
+        return super(self, UserSetupAdmin).change_view(self, request, object_id, *args, **kwargs)
 
 
 admin.site.register(Role, RoleAdmin)
