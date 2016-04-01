@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+Revision 9494631 (01.04.2016, 06:48 UTC)
+----------------------------------------
+
+* LUN-2817
+
+  * Deny access to UserSetup change_form.
+
+* LUN-2917
+
+  * Document UserSetupAdmin workaround.
+
+No other commits.
+
 Revision 75f8466 (01.10.2015, 12:21 UTC)
 ----------------------------------------
 
