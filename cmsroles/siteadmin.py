@@ -74,3 +74,38 @@ def get_user_roles_on_sites_ids(user):
     for role_id, global_perm_site, page_perm_site in roles_with_sites:
         result_data[role_id].add(global_perm_site or page_perm_site)
     return result_data
+
+
+class FilerRolesManager(object):
+    """
+    Permissions manager used by django-filer to check user rights on filer objects.
+    """
+
+    def is_site_admin(self, user):
+        return is_site_admin(user)
+
+    def has_perm_on_site(self, user, site_id, perm):
+        app_name, perm_name = perm.split('.')
+        roles_on_site = [
+            role for role, site_ids in get_user_roles_on_sites_ids(user).items()
+            if site_id in site_ids
+        ]
+        return Permission.objects.filter(
+            content_type__app_label=app_name,
+            codename=perm_name,
+            group__role__in=roles_on_site).exists()
+
+    def get_accessible_sites(self, user):
+        """
+        Returns ids of the sites on which the user has access.
+        """
+        available_sites = set()
+        for sites in get_user_roles_on_sites_ids(user).values():
+            available_sites |= sites
+        return available_sites
+
+    def get_administered_sites(self, user):
+        """
+        Returns sites on which the user has admin access.
+        """
+        return get_administered_sites(user)
