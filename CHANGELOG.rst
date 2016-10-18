@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+Revision 48e8854 (18.10.2016, 07:41 UTC)
+----------------------------------------
+
+* LUN-3289
+
+  * Implement interface for filer rights check.
+
+No other commits.
+
 Revision 9494631 (01.04.2016, 06:48 UTC)
 ----------------------------------------
 
